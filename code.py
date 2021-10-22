@@ -18,13 +18,26 @@ def game_scene():
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
     
     # buttons that you want to keep state information on
-    a_button = constants
+    a_button = constans.button_state["button_up"]
+    b_button = constans.button_state["button_up"]
+    start_button = constans.button_state["button_up"]
+    select_button = constans.button_state["button_up"]
+    
+    # ger sound ready
+    pew_sound = open("pew.wav", 'rb')
+    sound = ugame.audio
+    sound.stop()
+    sound.mute(False)
     
     # sets the background to image 0 in the image bank
     #   and the sie (10x8 titles of size 16x16)
     background = stage.Grid(image_bank_background, 10, 8)
     
     ship = stage.Sprite(image_bank_sprites, 5, 75, constans.SCREEN_Y - (2 * constans.SPRITE_SIZE))
+    
+    alien = stage.Sprite(image_bank_sprites, 9,
+                    int(constans.SCREEN_X / 2 - constans.SPRITE_SIZE / 2),
+                    16)
     
     # create a stage for the background to show up on
     #   and set the frame rate to 60fps
@@ -42,9 +55,18 @@ def game_scene():
         
         # A button to fire
         if keys & ugame.K_X != 0:
-            print("A")
+            if a_button == constans.button_state["button_up"]:
+                a_button = constans.button_state["button_just_pressed"]
+            elif a_button == constans.button_state["button_just_pressed"]:
+                a_button = constans.button_state["button_still_pressed"]
+        else:
+            if a_button == constans.button_state["button_still_pressed"]:
+                a_button = constans.button_state["button_released"]
+            else:
+                a_button = constans.button_state["button_up"]
+        # B button
         if keys & ugame.K_O != 0:
-            print("B")
+            pass
         if keys & ugame.K_START != 0:
             print("Start")
         if keys & ugame.K_SELECT != 0:
@@ -68,6 +90,9 @@ def game_scene():
             pass
         
         # updete game logic
+        # play sound of A was button_just_presed
+        if a_button == constans.button_state["button_just_presed"]:
+            sound.play(pew_sound)
         
         # redraw Sprites
         game.render_sprites([ship])
