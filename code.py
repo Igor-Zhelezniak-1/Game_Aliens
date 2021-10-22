@@ -17,6 +17,9 @@ def game_scene():
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
     
+    # buttons that you want to keep state information on
+    a_button = constants
+    
     # sets the background to image 0 in the image bank
     #   and the sie (10x8 titles of size 16x16)
     background = stage.Grid(image_bank_background, 10, 8)
